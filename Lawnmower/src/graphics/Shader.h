@@ -7,7 +7,7 @@ public:
 	Shader(const char* vertexPath, const char* fragmentPath);
 	~Shader();
 
-	void Bind();
+	void Bind() const;
 	void Unbind() const;
 private:
 	unsigned int getLocation(const char* name);

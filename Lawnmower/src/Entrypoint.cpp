@@ -1,39 +1,51 @@
 #include <iostream>
 #include "graphics/Window.h"
 #include "graphics/Shader.h"
+#include "graphics/Buffer.h"
 
 int main() {
 	Window window(1080, 720, "Lawnmower");
 	Shader shader("res/shaders/test.vs", "res/shaders/test.fs");
 
+	glClearColor(0.1, 0.4, 0.5, 1.0);
+
 	float vertices[] = {
-	-0.5f, -0.5f, 0.0f,
-	 0.5f, -0.5f, 0.0f,
-	 0.0f,  0.5f, 0.0f
+		0.1f,  0.1f, 0.0f,
+		0.1f, -0.1f, 0.0f,
+		-0.1f, -0.1f, 0.0f,
+		-0.1f,  0.1f, 0.0f
 	};
 
-	unsigned int VAO, VBO;
-	glGenVertexArrays(1, &VAO);
-	glGenBuffers(1, &VBO);
+	unsigned int indices[] = {
+	0, 1, 3,
+	1, 2, 3
+	};
+	
+	VertexArray vertexArray;
+	vertexArray.Bind();
 
-	glBindVertexArray(VAO);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	VertexBuffer vertexBuffer(vertices, sizeof(vertices));
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0);
+	IndexBuffer indexBuffer(indices, sizeof(indices));
+
+	vertexArray.AddVertexBuffer(vertexBuffer);
+	vertexArray.AddIndexBuffer(indexBuffer);
+
 
 	while (window.Running())
 	{
 		window.Clear();
+
 		shader.Bind();
-		glBindVertexArray(VAO);
-		glDrawArrays(GL_TRIANGLES, 0, 3);
-		glBindVertexArray(0);
+		vertexArray.Bind();
+		glDrawElements(GL_TRIANGLES, indexBuffer.getCount(), GL_UNSIGNED_INT, 0);
+		vertexArray.Unbind();
+
 		window.Update();
 	}
-	glDeleteVertexArrays(1, &VAO);
-	glDeleteBuffers(1, &VBO);
+	
+	vertexBuffer.~VertexBuffer();
+	indexBuffer.~IndexBuffer();
 
 	window.~Window();
 

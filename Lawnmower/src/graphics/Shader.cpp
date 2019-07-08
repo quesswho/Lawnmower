@@ -70,7 +70,7 @@ bool Shader::init(const char* vertexPath, const char* fragmentPath)
 	return true;
 }
 
-void Shader::Bind()
+void Shader::Bind() const
 {
 	glUseProgram(m_ShaderID);
 }
