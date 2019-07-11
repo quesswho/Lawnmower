@@ -1,7 +1,7 @@
 #include "Buffer.h"
 #include <GL/glew.h>
 
-VertexBuffer::VertexBuffer(float* vertices, unsigned int size)
+VertexBuffer::VertexBuffer(const float* vertices, unsigned int size)
 {
 	glGenBuffers(1, &m_VertexBufferID);
 	glBindBuffer(GL_ARRAY_BUFFER, m_VertexBufferID);
@@ -25,7 +25,7 @@ void VertexBuffer::Unbind() const
 
 /////////////
 
-IndexBuffer::IndexBuffer(unsigned int* indices, unsigned int count)
+IndexBuffer::IndexBuffer(const unsigned int* indices, unsigned int count)
 	: m_Count(count)
 {
 	glGenBuffers(1, &m_IndexBufferID);
@@ -60,12 +60,10 @@ VertexArray::~VertexArray()
 	glDeleteVertexArrays(1, &m_VertexArrayID);
 }
 
-void VertexArray::AddVertexBuffer(const std::shared_ptr<VertexBuffer>& vertexBuffer)
+void VertexArray::AddVertexBuffer(const std::shared_ptr<VertexBuffer>& vertexBuffer, unsigned int index)
 {
-	unsigned int index = 0;
 	glBindVertexArray(m_VertexArrayID);
 	vertexBuffer->Bind();
-
 	glVertexAttribPointer(index, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(index);
 	m_VertexBuffers.push_back(vertexBuffer);

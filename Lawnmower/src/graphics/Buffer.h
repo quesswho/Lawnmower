@@ -4,7 +4,7 @@
 
 class VertexBuffer {
 public:
-	VertexBuffer(float* vertices, unsigned int size);
+	VertexBuffer(const float* vertices, unsigned int size);
 	~VertexBuffer();
 
 	void Bind() const;
@@ -18,7 +18,7 @@ class IndexBuffer {
 private:
 	unsigned int m_Count;
 public:
-	IndexBuffer(unsigned int* indices, unsigned int count);
+	IndexBuffer(const unsigned int* indices, unsigned int count);
 	~IndexBuffer();
 
 	void Bind() const;
@@ -37,7 +37,7 @@ public:
 	void Bind() const;
 	void Unbind() const;
 
-	void AddVertexBuffer(const std::shared_ptr<VertexBuffer> &vertexBuffer);
+	void AddVertexBuffer(const std::shared_ptr<VertexBuffer> &vertexBuffer, unsigned int index);
 	void SetIndexBuffer(const std::shared_ptr<IndexBuffer> &indexBuffer);
 
 	const std::vector<std::shared_ptr<VertexBuffer>> &getVertexBuffers() const { return m_VertexBuffers; }

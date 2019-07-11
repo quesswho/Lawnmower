@@ -1,19 +1,17 @@
 #pragma once
 
-#include "Buffer.h"
+#include "Sprite.h"
 #include <vector>
 
 class Renderer {
 private:
-	std::vector<std::shared_ptr<VertexArray>> m_Sprites;
+	std::vector<Sprite> m_Sprites;
 public:
 	Renderer();
 
-	void Clear() const;
+	void Clear(float x, float y, float z);
 
-	void Begin();
-	void End();
-	void Submit(const std::shared_ptr<VertexArray>& vertexArray);
+	void Submit(const Sprite sprite);
 
 	void Draw();
 };

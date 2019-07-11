@@ -5,33 +5,23 @@ Renderer::Renderer()
 	//setup camera
 }
 
-void Renderer::Begin() 
+void Renderer::Clear(float x, float y, float z)
 {
-
+	glClearColor(x,y,z,1.0);
 }
 
-void Renderer::End()
+void Renderer::Submit(const Sprite sprite)
 {
-
-}
-
-void Renderer::Clear() const
-{
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-}
-
-void Renderer::Submit(const std::shared_ptr<VertexArray>& vertexArray)
-{
-	m_Sprites.push_back(vertexArray);
+	m_Sprites.push_back(sprite);
 }
 
 void Renderer::Draw()
 {
-	std::shared_ptr<VertexArray> temp = nullptr;
-	for (std::vector<std::shared_ptr<VertexArray>>::iterator iteration = m_Sprites.begin(); iteration != m_Sprites.end(); iteration++)
+	while (!m_Sprites.empty())
 	{
-		temp = *iteration;
-		temp->Bind();
-		glDrawElements(GL_TRIANGLES, temp->getIndexBuffer()->getCount(), GL_UNSIGNED_INT, 0);
+		Sprite sprite = m_Sprites.back();
+		sprite.Bind();
+		glDrawElements(GL_TRIANGLES, sprite.getIndexCount(), GL_UNSIGNED_INT, 0);
+		m_Sprites.pop_back();
 	}
 }
