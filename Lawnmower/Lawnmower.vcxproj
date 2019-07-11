@@ -143,11 +143,13 @@
   <ItemGroup>
     <ClCompile Include="src\Entrypoint.cpp" />
     <ClCompile Include="src\graphics\Buffer.cpp" />
+    <ClCompile Include="src\graphics\Renderer.cpp" />
     <ClCompile Include="src\graphics\Shader.cpp" />
     <ClCompile Include="src\graphics\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\graphics\Buffer.h" />
+    <ClInclude Include="src\graphics\Renderer.h" />
     <ClInclude Include="src\graphics\Shader.h" />
     <ClInclude Include="src\graphics\Window.h" />
     <ClInclude Include="src\util\ReadFile.h" />

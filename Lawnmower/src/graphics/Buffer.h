@@ -9,6 +9,7 @@ public:
 
 	void Bind() const;
 	void Unbind() const;
+
 private:
 	unsigned int m_VertexBufferID;
 };
@@ -36,13 +37,13 @@ public:
 	void Bind() const;
 	void Unbind() const;
 
-	void AddVertexBuffer(const VertexBuffer &vertexBuffer);
-	void AddIndexBuffer(const IndexBuffer &indexBuffer);
+	void AddVertexBuffer(const std::shared_ptr<VertexBuffer> &vertexBuffer);
+	void SetIndexBuffer(const std::shared_ptr<IndexBuffer> &indexBuffer);
 
-	const std::vector<VertexBuffer*> getVertexBuffers() const { return m_VertexBuffers; }
-	const IndexBuffer* getIndexBuffer() const { return m_IndexBuffer; }
+	const std::vector<std::shared_ptr<VertexBuffer>> &getVertexBuffers() const { return m_VertexBuffers; }
+	const std::shared_ptr<IndexBuffer> &getIndexBuffer() const { return m_IndexBuffer; }
 private:
 	unsigned int m_VertexArrayID;
-	std::vector<VertexBuffer*> m_VertexBuffers;
-	const IndexBuffer* m_IndexBuffer;
+	std::vector<std::shared_ptr<VertexBuffer>> m_VertexBuffers;
+	std::shared_ptr<IndexBuffer> m_IndexBuffer;
 };

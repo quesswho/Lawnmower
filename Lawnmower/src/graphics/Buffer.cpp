@@ -60,20 +60,22 @@ VertexArray::~VertexArray()
 	glDeleteVertexArrays(1, &m_VertexArrayID);
 }
 
-void VertexArray::AddVertexBuffer(const VertexBuffer &vertexBuffer)
+void VertexArray::AddVertexBuffer(const std::shared_ptr<VertexBuffer>& vertexBuffer)
 {
 	unsigned int index = 0;
 	glBindVertexArray(m_VertexArrayID);
-	vertexBuffer.Bind();
+	vertexBuffer->Bind();
 
 	glVertexAttribPointer(index, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(index);
+	m_VertexBuffers.push_back(vertexBuffer);
 }
 
-void VertexArray::AddIndexBuffer(const IndexBuffer &indexBuffer)
+void VertexArray::SetIndexBuffer(const std::shared_ptr<IndexBuffer> &indexBuffer)
 {
 	glBindVertexArray(m_VertexArrayID);
-	m_IndexBuffer = &indexBuffer;
+	indexBuffer->Bind();
+	m_IndexBuffer = indexBuffer;
 }
 
 void VertexArray::Bind() const
