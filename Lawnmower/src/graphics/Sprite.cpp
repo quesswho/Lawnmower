@@ -1,7 +1,8 @@
 #include "Sprite.h"
 #include <iostream>
 
-Sprite::Sprite(glm::vec2 position, glm::vec2 size, glm::vec3 f_colors)
+Sprite::Sprite(glm::vec2 position, glm::vec2 size, glm::vec3 f_colors, Shader shader)
+	: m_Shader(shader)
 {
 
 	float vertices[] = {
@@ -44,9 +45,11 @@ Sprite::~Sprite()
 void Sprite::Bind() const
 {
 	m_VertexArray->Bind();
+	m_Shader.Bind();
 }
 
 void Sprite::Unbind() const
 {
-	m_VertexArray->Bind();
+	m_VertexArray->Unbind();
+	m_Shader.Unbind();
 }

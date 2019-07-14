@@ -38,6 +38,7 @@ public:
 	void Unbind() const;
 
 	void AddVertexBuffer(const std::shared_ptr<VertexBuffer> &vertexBuffer, unsigned int index);
+	void AddTextureBuffer(const std::shared_ptr<VertexBuffer> &TextureCoords, unsigned int index);
 	void SetIndexBuffer(const std::shared_ptr<IndexBuffer> &indexBuffer);
 
 	const std::vector<std::shared_ptr<VertexBuffer>> &getVertexBuffers() const { return m_VertexBuffers; }

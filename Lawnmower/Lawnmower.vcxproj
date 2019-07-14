@@ -70,7 +70,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(SolutionDir)lib\glew-2.1.0\include;$(SolutionDir)lib\glfw-3.3\include;$(SolutionDir)lib\glm\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)lib\glew-2.1.0\include;$(SolutionDir)lib\glfw-3.3\include;$(SolutionDir)lib\glm\include;$(SolutionDir)lib\stb_image;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)lib\glew-2.1.0\lib\Release\Win32;$(SolutionDir)lib\glfw-3.3\lib-vc2017;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)bin\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)\bin\$(Configuration)\intermediates\</IntDir>
@@ -146,6 +146,8 @@
     <ClCompile Include="src\graphics\Renderer.cpp" />
     <ClCompile Include="src\graphics\Shader.cpp" />
     <ClCompile Include="src\graphics\Sprite.cpp" />
+    <ClCompile Include="src\graphics\TexturedSprite.cpp" />
+    <ClCompile Include="src\graphics\texture\Texture.cpp" />
     <ClCompile Include="src\graphics\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -153,16 +155,20 @@
     <ClInclude Include="src\graphics\Renderer.h" />
     <ClInclude Include="src\graphics\Shader.h" />
     <ClInclude Include="src\graphics\Sprite.h" />
+    <ClInclude Include="src\graphics\TexturedSprite.h" />
+    <ClInclude Include="src\graphics\texture\Texture.h" />
+    <ClInclude Include="src\graphics\texture\stb_image.h" />
     <ClInclude Include="src\graphics\Window.h" />
-    <ClInclude Include="src\util\ReadFile.h" />
+    <ClInclude Include="src\util\FileUtils.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="res\shaders\basic.fs">
-      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
-    </None>
-    <None Include="res\shaders\basic.vs">
-      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
-    </None>
+    <None Include="res\shader\basic.fs" />
+    <None Include="res\shader\basic.vs" />
+    <None Include="res\shader\texture.fs" />
+    <None Include="res\shader\texture.vs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\texture\LawnMower.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

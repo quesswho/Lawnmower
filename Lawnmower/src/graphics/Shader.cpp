@@ -1,5 +1,5 @@
 #include "Shader.h"
-#include "util/ReadFile.h"
+#include "util/FileUtils.h"
 #include <GL/glew.h>
 #include <iostream>
 
@@ -78,6 +78,11 @@ void Shader::Bind() const
 void Shader::Unbind() const
 {
 	glUseProgram(0);
+}
+
+void Shader::setUniform1i(const char* uniform, int value)
+{
+	glUniform1f(getLocation(uniform), value);
 }
 
 unsigned int Shader::getLocation(const char* name)

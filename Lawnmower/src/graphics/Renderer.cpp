@@ -2,7 +2,9 @@
 #include <GL/glew.h>
 Renderer::Renderer()
 {
-	//setup camera
+	//Enable transparency
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 void Renderer::Clear(float x, float y, float z)
@@ -15,6 +17,11 @@ void Renderer::Submit(const Sprite sprite)
 	m_Sprites.push_back(sprite);
 }
 
+void Renderer::Submit(const TexturedSprite texsprite)
+{
+	m_TexSprites.push_back(texsprite);
+}
+
 void Renderer::Draw()
 {
 	while (!m_Sprites.empty())
@@ -23,5 +30,13 @@ void Renderer::Draw()
 		sprite.Bind();
 		glDrawElements(GL_TRIANGLES, sprite.getIndexCount(), GL_UNSIGNED_INT, 0);
 		m_Sprites.pop_back();
+	}
+
+	while (!m_TexSprites.empty())
+	{
+		TexturedSprite sprite = m_TexSprites.back();
+		sprite.Bind();
+		glDrawElements(GL_TRIANGLES, sprite.getIndexCount(), GL_UNSIGNED_INT, 0);
+		m_TexSprites.pop_back();
 	}
 }

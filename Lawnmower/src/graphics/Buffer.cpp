@@ -60,11 +60,20 @@ VertexArray::~VertexArray()
 	glDeleteVertexArrays(1, &m_VertexArrayID);
 }
 
+void VertexArray::AddTextureBuffer(const std::shared_ptr<VertexBuffer> &TextureCoords, unsigned int index)
+{
+	glBindVertexArray(m_VertexArrayID);
+	TextureCoords->Bind();
+	glVertexAttribPointer(index, 2, GL_FLOAT, GL_FALSE, 0, 0);
+	glEnableVertexAttribArray(index);
+	m_VertexBuffers.push_back(TextureCoords);
+}
+
 void VertexArray::AddVertexBuffer(const std::shared_ptr<VertexBuffer>& vertexBuffer, unsigned int index)
 {
 	glBindVertexArray(m_VertexArrayID);
 	vertexBuffer->Bind();
-	glVertexAttribPointer(index, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glVertexAttribPointer(index, 3, GL_FLOAT, GL_FALSE, 0, 0);
 	glEnableVertexAttribArray(index);
 	m_VertexBuffers.push_back(vertexBuffer);
 }
