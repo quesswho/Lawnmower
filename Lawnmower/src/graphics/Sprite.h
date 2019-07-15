@@ -1,5 +1,5 @@
 #pragma once
-#include "Buffer.h"
+#include "renderer/Buffer.h"
 #include "Texture/Texture.h"
 #include "Shader.h"
 
@@ -17,10 +17,12 @@ public:
 
 	unsigned int inline getIndexCount() { return m_IndexBuffer->getCount(); }
 
+	glm::vec2 m_Position;
+	Shader m_Shader;
+
 private:
 	std::shared_ptr<VertexArray> m_VertexArray;
 	std::shared_ptr<VertexBuffer> m_VertexBuffer;
 	std::shared_ptr<VertexBuffer> m_ColorBuffer;
 	std::shared_ptr<IndexBuffer> m_IndexBuffer;
-	Shader m_Shader;
 };

@@ -1,7 +1,7 @@
 #pragma once
 #include <glm/vec2.hpp>
 
-#include "Buffer.h"
+#include "renderer/Buffer.h"
 #include "Texture/Texture.h"
 #include "Shader.h"
 

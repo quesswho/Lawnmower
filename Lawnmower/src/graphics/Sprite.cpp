@@ -2,7 +2,7 @@
 #include <iostream>
 
 Sprite::Sprite(glm::vec2 position, glm::vec2 size, glm::vec3 f_colors, Shader shader)
-	: m_Shader(shader)
+	: m_Shader(shader), m_Position(position)
 {
 
 	float vertices[] = {

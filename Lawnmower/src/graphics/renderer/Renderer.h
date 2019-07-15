@@ -1,7 +1,7 @@
 #pragma once
 
-#include "TexturedSprite.h"
-#include "Sprite.h"
+#include "graphics/TexturedSprite.h"
+#include "graphics/Sprite.h"
 #include <vector>
 
 class Renderer {
