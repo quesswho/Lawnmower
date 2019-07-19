@@ -7,7 +7,7 @@
 
 class TexturedSprite {
 public:
-	TexturedSprite(glm::vec2 position, glm::vec2 size, Texture texture, Shader shader);
+	TexturedSprite(glm::vec3 position, glm::vec2 size, Texture texture, Shader shader);
 	~TexturedSprite() {}
 
 	void Bind() const;
@@ -17,7 +17,7 @@ public:
 private:
 	std::shared_ptr<VertexArray> m_VertexArray;
 	std::shared_ptr<VertexBuffer> m_VertexBuffer;
-	std::shared_ptr<VertexBuffer> m_texCoords;
+	std::shared_ptr<VertexBuffer> m_TexCoords;
 	std::shared_ptr<IndexBuffer> m_IndexBuffer;
 	Shader m_Shader;
 	Texture m_Texture;

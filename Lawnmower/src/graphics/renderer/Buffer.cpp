@@ -25,7 +25,7 @@ void VertexBuffer::Unbind() const
 
 /////////////
 
-IndexBuffer::IndexBuffer(const unsigned int* indices, unsigned int count)
+IndexBuffer::IndexBuffer(unsigned int* indices, unsigned int count)
 	: m_Count(count)
 {
 	glGenBuffers(1, &m_IndexBufferID);
@@ -60,23 +60,36 @@ VertexArray::~VertexArray()
 	glDeleteVertexArrays(1, &m_VertexArrayID);
 }
 
-void VertexArray::AddTextureBuffer(const std::shared_ptr<VertexBuffer> &TextureCoords, unsigned int index)
+//vec2
+void VertexArray::AddTextureBuffer(const std::shared_ptr<VertexBuffer>& textureCoords, unsigned int stride, unsigned int offset, unsigned int index)
 {
 	glBindVertexArray(m_VertexArrayID);
-	TextureCoords->Bind();
+	textureCoords->Bind();
 	glVertexAttribPointer(index, 2, GL_FLOAT, GL_FALSE, 0, 0);
 	glEnableVertexAttribArray(index);
-	m_VertexBuffers.push_back(TextureCoords);
+	m_VertexBuffers.push_back(textureCoords);
 }
 
-void VertexArray::AddVertexBuffer(const std::shared_ptr<VertexBuffer>& vertexBuffer, unsigned int index)
+//vec3
+void VertexArray::AddVertexBuffer(const std::shared_ptr<VertexBuffer>& vertexBuffer, unsigned int stride, unsigned int offset, unsigned int index)
 {
 	glBindVertexArray(m_VertexArrayID);
 	vertexBuffer->Bind();
-	glVertexAttribPointer(index, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	glVertexAttribPointer(index, 3, GL_FLOAT, GL_FALSE, stride, (const void*)offset);
 	glEnableVertexAttribArray(index);
 	m_VertexBuffers.push_back(vertexBuffer);
 }
+
+//vec4
+void VertexArray::AddColorBuffer(const std::shared_ptr<VertexBuffer>& colorBuffer, unsigned int stride, unsigned int offset, unsigned int index)
+{
+	glBindVertexArray(m_VertexArrayID);
+	colorBuffer->Bind();
+	glVertexAttribPointer(index, 4, GL_FLOAT, GL_FALSE, stride, (const void*)offset);
+	glEnableVertexAttribArray(index);
+	m_VertexBuffers.push_back(colorBuffer);
+}
+
 
 void VertexArray::SetIndexBuffer(const std::shared_ptr<IndexBuffer> &indexBuffer)
 {

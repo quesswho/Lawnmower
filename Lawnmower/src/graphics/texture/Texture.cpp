@@ -8,7 +8,6 @@
 
 Texture::Texture(const char* texturePath)
 {
-
 	glGenTextures(1, &m_TextureID);
 	glBindTexture(GL_TEXTURE_2D, m_TextureID);
 

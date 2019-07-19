@@ -1,28 +1,24 @@
 #pragma once
-#include "renderer/Buffer.h"
-#include "Texture/Texture.h"
-#include "Shader.h"
-
 #include <glm/vec2.hpp>
-#include <glm/vec3.hpp>
+#include "Shader.h"
+#include <memory>
+#include "renderer/Buffer.h"
+
+
 
 class Sprite {
 public:
-	Sprite(glm::vec2 position, glm::vec2 size, glm::vec3 colors, Shader shader);
-	~Sprite();
+	Sprite(const glm::vec3 position, const glm::vec2 size, const glm::vec4 color)
+		: m_Position(position), m_Size(size), m_Color(color) {}
+	Sprite(const glm::vec2 position, const glm::vec2 size, const glm::vec3 f_colors) //lazy constructor
+		: Sprite(glm::vec3(position, 0.0), size, glm::vec4(f_colors, 0.0)) {}
+	~Sprite() {}
 
-	void Bind() const;
-	void Unbind() const;
-	
-
-	unsigned int inline getIndexCount() { return m_IndexBuffer->getCount(); }
-
-	glm::vec2 m_Position;
-	Shader m_Shader;
-
-private:
-	std::shared_ptr<VertexArray> m_VertexArray;
-	std::shared_ptr<VertexBuffer> m_VertexBuffer;
-	std::shared_ptr<VertexBuffer> m_ColorBuffer;
-	std::shared_ptr<IndexBuffer> m_IndexBuffer;
+	inline const glm::vec3& getPosition() const { return m_Position; }
+	inline const glm::vec2& getSize() const { return m_Size; }
+	inline const glm::vec4& getColor() const { return m_Color; }
+protected:
+	glm::vec3 m_Position;
+	glm::vec2 m_Size;
+	glm::vec4 m_Color;
 };

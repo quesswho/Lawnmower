@@ -2,11 +2,13 @@
 #include "util/FileUtils.h"
 #include <GL/glew.h>
 #include <iostream>
+#include <Windows.h>
 
 Shader::Shader(const char* vertexPath, const char* fragmentPath)
 {
 	if (!init(vertexPath, fragmentPath))
 	{
+		Beep(500, 1000); //Make sure the error is heard
 	}
 }
 

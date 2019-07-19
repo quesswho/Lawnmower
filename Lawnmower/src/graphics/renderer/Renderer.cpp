@@ -1,20 +1,88 @@
 #include "Renderer.h"
 #include <GL/glew.h>
+
+#define RENDERER_MAX_SPRITES	2530
+
 Renderer::Renderer()
 {
-	//Enable transparency
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	m_Buffer.reset(new VertexArray());
+	m_Buffer->Bind();
+	m_VertexBuffer.reset(new VertexBuffer(NULL, sizeof(PointData) * 4 *  RENDERER_MAX_SPRITES)); //data is set in Submit(*), pre allocate memory
+	m_Buffer->AddVertexBuffer(m_VertexBuffer, sizeof(PointData), 0, 0);
+	m_Buffer->AddVertexBuffer(m_VertexBuffer, sizeof(PointData), 3 * sizeof(GLfloat), 1);
+
+	GLuint* indices = new GLuint[RENDERER_MAX_SPRITES * 4 * 6];
+
+	int offset = 0;
+	for (int i = 0; i < RENDERER_MAX_SPRITES * 4 * 6; i += 6)
+	{
+		indices[i] = offset + 0;
+		indices[i + 1] = offset + 1;
+		indices[i + 2] = offset + 3;
+
+		indices[i + 3] = offset + 1;
+		indices[i + 4] = offset + 2;
+		indices[i + 5] = offset + 3;
+
+		offset += 4;
+	}
+
+	m_IBO = new IndexBuffer(indices, RENDERER_MAX_SPRITES * 4 * 6);
+
+	m_Buffer->Unbind();
+	
+	
 }
 
-void Renderer::Clear(float x, float y, float z)
+Renderer::~Renderer()
 {
-	glClearColor(x,y,z,1.0);
+	delete m_IBO;
+	m_VertexBuffer->~VertexBuffer();
 }
 
-void Renderer::Submit(const Sprite sprite)
+void Renderer::Clear(const float x, const float y, const float z)
 {
-	m_Sprites.push_back(sprite);
+	glClearColor(x, y, z, 1.0);
+}
+
+void Renderer::Begin()
+{
+	
+	m_VertexBuffer->Bind();
+	m_Points = (PointData*)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY); //opengl should read m_Batch
+}
+
+void Renderer::End()
+{
+	glUnmapBuffer(GL_ARRAY_BUFFER);
+	m_VertexBuffer->Unbind();
+}
+
+void Renderer::Submit(const Sprite* sprite)
+{
+	const glm::vec3& position = sprite->getPosition();
+	const glm::vec2& size = sprite->getSize();
+	const glm::vec4& color = sprite->getColor();
+
+	m_Points->vertex = position;
+	m_Points->color = color;
+	m_Points++;
+
+	m_Points->vertex = glm::vec3(position.x, position.y + size.y, position.z);
+	m_Points->color = color;
+	m_Points++;
+
+	m_Points->vertex = glm::vec3(position.x + size.x, position.y + size.y, position.z);
+	m_Points->color = color;
+	m_Points++;
+
+	m_Points->vertex = glm::vec3(position.x + size.x, position.y, position.z);
+	m_Points->color = color;
+	m_Points++;
+
+	m_IndexCount += 6;
+
+
 }
 
 void Renderer::Submit(const TexturedSprite texsprite)
@@ -24,19 +92,26 @@ void Renderer::Submit(const TexturedSprite texsprite)
 
 void Renderer::Draw()
 {
-	while (!m_Sprites.empty())
-	{
-		Sprite sprite = m_Sprites.back();
-		sprite.Bind();
-		glDrawElements(GL_TRIANGLES, sprite.getIndexCount(), GL_UNSIGNED_INT, 0);
-		m_Sprites.pop_back();
-	}
+	//Render simple sprites without texture
+	m_Buffer->Bind();
+	m_IBO->Bind();
 
+	glDrawElements(GL_TRIANGLES, m_IndexCount, GL_UNSIGNED_INT, NULL);
+
+	m_IBO->Unbind();
+	m_Buffer->Unbind();
+
+	m_IndexCount = 0;
+
+	//Render sprite with Texture and different shader
 	while (!m_TexSprites.empty())
 	{
 		TexturedSprite sprite = m_TexSprites.back();
 		sprite.Bind();
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); //Enable transparency for the texture
 		glDrawElements(GL_TRIANGLES, sprite.getIndexCount(), GL_UNSIGNED_INT, 0);
+		glDisable(GL_BLEND);
 		m_TexSprites.pop_back();
 	}
 }

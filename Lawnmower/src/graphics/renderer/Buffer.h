@@ -18,13 +18,13 @@ class IndexBuffer {
 private:
 	unsigned int m_Count;
 public:
-	IndexBuffer(const unsigned int* indices, unsigned int count);
+	IndexBuffer(unsigned int* indices, unsigned int count);
 	~IndexBuffer();
 
 	void Bind() const;
 	void Unbind() const;
 
-	unsigned int getCount() const { return m_Count; }
+	inline unsigned int getCount() const { return m_Count; }
 private:
 	unsigned int m_IndexBufferID;
 };
@@ -37,8 +37,9 @@ public:
 	void Bind() const;
 	void Unbind() const;
 
-	void AddVertexBuffer(const std::shared_ptr<VertexBuffer> &vertexBuffer, unsigned int index);
-	void AddTextureBuffer(const std::shared_ptr<VertexBuffer> &TextureCoords, unsigned int index);
+	void AddVertexBuffer(const std::shared_ptr<VertexBuffer> &vertexBuffer, unsigned int stride, unsigned int offset, unsigned int index);
+	void AddColorBuffer(const std::shared_ptr<VertexBuffer>& colorBuffer, unsigned int stride, unsigned int offset, unsigned int index);
+	void AddTextureBuffer(const std::shared_ptr<VertexBuffer> &TextureCoords, unsigned int stride, unsigned int offset, unsigned int index);
 	void SetIndexBuffer(const std::shared_ptr<IndexBuffer> &indexBuffer);
 
 	const std::vector<std::shared_ptr<VertexBuffer>> &getVertexBuffers() const { return m_VertexBuffers; }
