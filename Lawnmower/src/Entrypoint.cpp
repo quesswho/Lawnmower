@@ -4,6 +4,7 @@
 #include <glm/gtx/transform.hpp>
 #include <time.h>
 #include <algorithm>
+#include <Windows.h>
 
 #include "graphics/Window.h"
 #include "graphics/Shader.h"
@@ -11,7 +12,7 @@
 #include "graphics/Sprite.h"
 #include "graphics/TexturedSprite.h"
 
-#define AI 1
+#define AI 0
 
 #define GRID_SIZE 50
 #define GRID_GAP 2.01/GRID_SIZE
@@ -62,7 +63,7 @@ int main() {
 	{
 		window.Clear();
 #if !AI
-		if (window.m_keys[GLFW_KEY_RIGHT]) {
+		if (window.m_keys[GLFW_KEY_RIGHT] >= 1) {
 			move(glm::vec2(1, 0));
 			Sleep(100);
 		}

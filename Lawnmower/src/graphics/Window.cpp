@@ -1,4 +1,5 @@
 #include "Window.h"
+#include <Windows.h>
 #include <iostream>
 
 void window_resize(GLFWwindow *window, int width, int height);

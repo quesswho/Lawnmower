@@ -35,7 +35,6 @@ TexturedSprite::TexturedSprite(glm::vec3 position, glm::vec2 size, Texture textu
 
 	m_Shader.Bind();
 	m_Shader.setUniform1i("texture1", 0);
-	//texture.Unbind();
 }
 
 void TexturedSprite::Bind() const
