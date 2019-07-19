@@ -12,9 +12,19 @@
 #include "graphics/Sprite.h"
 #include "graphics/TexturedSprite.h"
 
-#define AI 0
 
-#define GRID_SIZE 50
+/////////////////////////////////////////////////////
+/////////////INSTRUCTIONS////////////////////////////
+/////////////////////////////////////////////////////
+//	Press F5 to start the program  //////////////////
+//  Use the Arrow keys to control the lawnmower /////
+//  Press 'x' to start the simulation ///////////////
+//  Press 'c' to stop the simulation ////////////////
+/////////////////////////////////////////////////////
+
+
+
+#define GRID_SIZE 15
 #define GRID_GAP 2.01/GRID_SIZE
 #define LAWNMOWER_SIZE GRID_GAP/2-GRID_GAP/100
 #define LAWNMOWER_OFFSET GRID_GAP/2
@@ -22,12 +32,18 @@
 
 void move(glm::vec2 direction);
 void cut(glm::vec2 pos);
+int isClear();
+void reset();
+
 
 glm::mat4x4 mat4(1.0f);
 
 bool iscut[GRID_SIZE*GRID_SIZE] = { 0 };
 glm::vec2 pos(0, 0); //bottom, left
 std::vector<Sprite*> grid;
+bool done = false;
+bool ai = false;
+int alreadyCut = 0;
 
 int main() {
 	srand(time(NULL));
@@ -53,53 +69,69 @@ int main() {
 		}
 	}
 	cut(pos);
-
-	#if AI
 	glm::vec2 botDir;
-	bool ai = false;
-	#endif
 
 	while (window.Running())
 	{
 		window.Clear();
-#if !AI
-		if (window.m_keys[GLFW_KEY_RIGHT] >= 1) {
-			move(glm::vec2(1, 0));
+		if (window.m_keys[GLFW_KEY_R] >= Action::KEY_PRESS)
+			reset();
+
+		if (window.m_keys[GLFW_KEY_RIGHT] >= 1) { // enum Action { KEY_RELEASE, KEY_PRESS, KEY_REPEAT };
+			move(glm::vec2(1, 0));                //                   0            1           2
 			Sleep(100);
 		}
-		if (window.m_keys[GLFW_KEY_LEFT]) {
+		if (window.m_keys[GLFW_KEY_LEFT] >= 1) {
 			move(glm::vec2(-1, 0));
 			Sleep(100);
 		}
-		if (window.m_keys[GLFW_KEY_UP]) {
+		if (window.m_keys[GLFW_KEY_UP] >= 1) {
 			move(glm::vec2(0, 1));
 			Sleep(100);
 		}
-		if (window.m_keys[GLFW_KEY_DOWN]) {
+		if (window.m_keys[GLFW_KEY_DOWN] >= 1) {
 			move(glm::vec2(0, -1));
 			Sleep(100);
 		}
-#else
 		if (window.m_keys[GLFW_KEY_X])
 			ai = true;
 		if (window.m_keys[GLFW_KEY_C])
 			ai = false;
-		if (ai)
+		if (ai&&!done)
 		{
 			if (!iscut[(int)((pos.x + 1) + (pos.y) * GRID_SIZE)] && pos.x+1!=GRID_SIZE)
 				botDir = glm::vec2(1.0, 0.0);
 			else if(!iscut[(int)((pos.x) + (pos.y+1) * GRID_SIZE)] && pos.y + 1 != GRID_SIZE)
 				botDir = glm::vec2(0.0, 1.0);
-			else if (!iscut[(int)((pos.x + -1) + (pos.y) * GRID_SIZE)])
+			else if (!iscut[(int)((pos.x + -1) + (pos.y) * GRID_SIZE)] && pos.x >= 1)
 				botDir = glm::vec2(-1.0, 0.0);
-			else if (!iscut[(int)((pos.x) + (pos.y + -1) * GRID_SIZE)])
+			else if (!iscut[(int)((pos.x) + (pos.y + -1) * GRID_SIZE)] && pos.y >= 1)
 				botDir = glm::vec2(0.0, -1.0);
-			else
-				botDir = glm::vec2(0.0, 0.0);
+			else {
+				if (isClear() == -1) {
+					done = true;
+					std::cout << alreadyCut << " grid(s) had already been cut. Efficiency: " << int((double)(GRID_SIZE * GRID_SIZE - alreadyCut) / (GRID_SIZE * GRID_SIZE)*100) << "%" << std::endl;
+				}
+				else { //unstuck
+					glm::vec2 unCutPos(isClear() % GRID_SIZE, trunc(isClear() / GRID_SIZE));
+					int distancex = pos.x - unCutPos.x;
+					int distancey = pos.y - unCutPos.y;
+					if(abs(distancex) > abs(distancey))
+						if(distancex >= 1)
+							botDir = glm::vec2(-1.0, 0.0);
+						else
+							botDir = glm::vec2(1.0, 0.0);
+					else
+						if (distancey >= 1)
+							botDir = glm::vec2(0.0, -1.0);
+						else
+							botDir = glm::vec2(0.0, 1.0);
+				}
+
+			}
 			move(botDir);
-			//Sleep(1);
+			Sleep(10);
 		}
-#endif
 		TextureShader.setUniformMat4x4("model_matrix", mat4);
 		BasicShader.Bind();
 
@@ -137,12 +169,15 @@ void move(glm::vec2 move)
 
 	pos = newPos;
 	mat4 *= glm::translate(glm::vec3(move *= GRID_GAP, 0.0));
+	
 	cut(pos);
 }
 
 void cut(glm::vec2 pos)
 {
 	int arraypos = (int)((pos.x) + (pos.y) * GRID_SIZE);
+	if (iscut[arraypos])
+		alreadyCut++;
 	iscut[arraypos] = true;
 	std::vector<Sprite*> temp;
 	int i = 0;
@@ -160,3 +195,35 @@ void cut(glm::vec2 pos)
 	grid = temp;
 }
 
+int isClear()
+{
+	for (int i = 0; i < GRID_SIZE*GRID_SIZE; i++)
+	{
+		if (iscut[i] == 0)
+		{
+			return i;
+		}
+	}
+	return -1;
+}
+
+void reset()
+{
+	mat4 = glm::mat4(1.0f);
+	pos = glm::vec2(0, 0);
+	memset(iscut, 0, sizeof(iscut));
+	done = false;
+	ai = false;
+	alreadyCut = 0;
+
+	std::vector<Sprite*> temp;
+	for (double y = -1; y <= 1.00; y += GRID_GAP)
+	{
+		for (double x = -1; x <= 1.00; x += GRID_GAP)
+		{
+			temp.push_back(new Sprite(glm::vec2(x, y), glm::vec2(GRID_GAP, GRID_GAP), glm::vec3(0.0, ((0.2f - 0.1f) * ((float)rand() / RAND_MAX)) + 0.1f, 0.0)));
+		}
+	}
+	grid = temp;
+	cut(pos);
+}
