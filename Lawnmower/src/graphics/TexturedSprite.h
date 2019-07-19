@@ -7,18 +7,18 @@
 
 class TexturedSprite {
 public:
-	TexturedSprite(glm::vec3 position, glm::vec2 size, Texture texture, Shader shader);
+	TexturedSprite(const glm::vec3 position, const glm::vec2 size, const Texture texture, Shader shader);
 	~TexturedSprite() {}
 
 	void Bind() const;
 	void Unbind() const;
 
-	unsigned int inline getIndexCount() { return m_IndexBuffer->getCount(); }
+	const unsigned int inline getIndexCount() const { return m_IndexBuffer->getCount(); }
 private:
 	std::shared_ptr<VertexArray> m_VertexArray;
 	std::shared_ptr<VertexBuffer> m_VertexBuffer;
 	std::shared_ptr<VertexBuffer> m_TexCoords;
 	std::shared_ptr<IndexBuffer> m_IndexBuffer;
 	Shader m_Shader;
-	Texture m_Texture;
+	const Texture m_Texture;
 };

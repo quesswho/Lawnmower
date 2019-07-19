@@ -1,7 +1,6 @@
 #include "Shader.h"
 #include "util/FileUtils.h"
 #include <GL/glew.h>
-#include <iostream>
 #include <Windows.h>
 
 Shader::Shader(const char* vertexPath, const char* fragmentPath)

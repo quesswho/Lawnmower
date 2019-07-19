@@ -3,18 +3,18 @@
 
 #define RENDERER_MAX_SPRITES	2530
 
-Renderer::Renderer()
+Renderer::Renderer(unsigned int bufferSize)
 {
 	m_Buffer.reset(new VertexArray());
 	m_Buffer->Bind();
-	m_VertexBuffer.reset(new VertexBuffer(NULL, sizeof(PointData) * 4 *  RENDERER_MAX_SPRITES)); //data is set in Submit(*), pre allocate memory
+	m_VertexBuffer.reset(new VertexBuffer(NULL, sizeof(PointData) * 4 * bufferSize)); //data is set in Submit(*), pre allocate memory
 	m_Buffer->AddVertexBuffer(m_VertexBuffer, sizeof(PointData), 0, 0);
 	m_Buffer->AddVertexBuffer(m_VertexBuffer, sizeof(PointData), 3 * sizeof(GLfloat), 1);
 
-	GLuint* indices = new GLuint[RENDERER_MAX_SPRITES * 4 * 6];
+	GLuint* indices = new GLuint[bufferSize * 4 * 6];
 
 	int offset = 0;
-	for (int i = 0; i < RENDERER_MAX_SPRITES * 4 * 6; i += 6)
+	for (int i = 0; i < bufferSize * 4 * 6; i += 6)
 	{
 		indices[i] = offset + 0;
 		indices[i + 1] = offset + 1;
@@ -24,10 +24,10 @@ Renderer::Renderer()
 		indices[i + 4] = offset + 2;
 		indices[i + 5] = offset + 3;
 
-		offset += 4;
+		offset += 4; // 4 points after applying indices to cuboid/rectangle
 	}
 
-	m_IBO = new IndexBuffer(indices, RENDERER_MAX_SPRITES * 4 * 6);
+	m_IndexBuffer = new IndexBuffer(indices, bufferSize * 4 * 6);
 
 	m_Buffer->Unbind();
 	
@@ -36,7 +36,7 @@ Renderer::Renderer()
 
 Renderer::~Renderer()
 {
-	delete m_IBO;
+	delete m_IndexBuffer;
 	m_VertexBuffer->~VertexBuffer();
 }
 
@@ -94,11 +94,11 @@ void Renderer::Draw()
 {
 	//Render simple sprites without texture
 	m_Buffer->Bind();
-	m_IBO->Bind();
+	m_IndexBuffer->Bind();
 
 	glDrawElements(GL_TRIANGLES, m_IndexCount, GL_UNSIGNED_INT, NULL);
 
-	m_IBO->Unbind();
+	m_IndexBuffer->Unbind();
 	m_Buffer->Unbind();
 
 	m_IndexCount = 0;

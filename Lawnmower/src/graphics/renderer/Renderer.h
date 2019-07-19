@@ -10,11 +10,9 @@ struct PointData {
 	glm::vec4 color;
 };
 
-
-
 class Renderer {
 public:
-	Renderer();
+	Renderer(unsigned int bufferSize);
 	~Renderer();
 
 	void Clear(const float x, const float y, const float z);
@@ -26,10 +24,9 @@ public:
 
 	void Draw();
 private:
-	unsigned int m_VAO;
 	std::shared_ptr<VertexArray> m_Buffer;
 	std::shared_ptr<VertexBuffer> m_VertexBuffer;
-	IndexBuffer* m_IBO;
+	IndexBuffer* m_IndexBuffer;
 	unsigned int m_IndexCount;
 	PointData* m_Points;
 	std::vector<TexturedSprite> m_TexSprites;

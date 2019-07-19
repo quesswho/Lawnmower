@@ -3,21 +3,21 @@
 TexturedSprite::TexturedSprite(glm::vec3 position, glm::vec2 size, Texture texture, Shader shader)
 	: m_Texture(texture), m_Shader(shader)
 {
-	float vertices[] = {
+	const float vertices[] = {
 		size.x + position.x, size.y + position.y, 0.0f,
 		size.x + position.x, -size.y + position.y, 0.0f,
 		-size.x + position.x, -size.y + position.y, 0.0f,
 		-size.x + position.x, size.y + position.y, 0.0f,
 	};
 
-	float texCoords[] = {
+	const float texCoords[] = {
 		1.0f, 1.0f,
 		1.0f, 0.0f,
 		0.0f, 0.0f,
 		0.0f, 1.0f
 	};
 
-	unsigned int indices[] = {
+	const unsigned int indices[] = {
 	0, 1, 3,
 	1, 2, 3
 	};
@@ -35,7 +35,7 @@ TexturedSprite::TexturedSprite(glm::vec3 position, glm::vec2 size, Texture textu
 
 	m_Shader.Bind();
 	m_Shader.setUniform1i("texture1", 0);
-	texture.Unbind();
+	//texture.Unbind();
 }
 
 void TexturedSprite::Bind() const

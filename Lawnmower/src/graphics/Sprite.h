@@ -1,9 +1,5 @@
 #pragma once
 #include <glm/vec2.hpp>
-#include "Shader.h"
-#include <memory>
-#include "renderer/Buffer.h"
-
 
 
 class Sprite {
@@ -18,7 +14,7 @@ public:
 	inline const glm::vec2& getSize() const { return m_Size; }
 	inline const glm::vec4& getColor() const { return m_Color; }
 protected:
-	glm::vec3 m_Position;
-	glm::vec2 m_Size;
-	glm::vec4 m_Color;
+	const glm::vec3 m_Position;
+	const glm::vec2 m_Size;
+	const glm::vec4 m_Color;
 };

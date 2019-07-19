@@ -1,6 +1,5 @@
 #pragma once
 
-#include <Windows.h>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 enum Action { KEY_RELEASE, KEY_PRESS, KEY_REPEAT };

@@ -33,13 +33,15 @@ int main() {
 
 	Window window(720, 720, "Lawnmower");
 	
+
+	Renderer renderer(GRID_SIZE*GRID_SIZE);
+	renderer.Clear(0.1, 0.4, 0.5);
+
 	Shader BasicShader("res/shader/basic.vs", "res/shader/basic.fs");
 	Shader TextureShader("res/shader/texture.vs", "res/shader/texture.fs");
 
-	
 	Texture lawnmowerTexture("res/texture/LawnMower.png");
 	TexturedSprite lawnmower(glm::vec3(-1 + LAWNMOWER_OFFSET, -1 + LAWNMOWER_OFFSET, 0.0), glm::vec2(LAWNMOWER_SIZE, LAWNMOWER_SIZE), lawnmowerTexture, TextureShader);
-
 
 	for (double y = -1; y <= 1.00; y += GRID_GAP)
 	{
@@ -49,9 +51,6 @@ int main() {
 			grid.push_back(new Sprite(glm::vec2(x, y), glm::vec2(GRID_GAP, GRID_GAP), glm::vec3(0.0, ((0.2f - 0.1f) * ((float)rand() / RAND_MAX)) + 0.1f, 0.0)));
 		}
 	}
-
-	Renderer renderer;
-	renderer.Clear(0.1, 0.4, 0.5);
 	cut(pos);
 
 	#if AI
